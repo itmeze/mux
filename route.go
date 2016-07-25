@@ -36,6 +36,9 @@ type Route struct {
 	// Error resulted from building a route.
 	err error
 
+	//defaults
+	defaults map[string]string
+
 	buildVarsFunc BuildVarsFunc
 }
 
@@ -125,6 +128,31 @@ func (r *Route) Name(name string) *Route {
 // GetName returns the name for the route, if any.
 func (r *Route) GetName() string {
 	return r.name
+}
+
+// Defaults -----------------------------------------------------------------------
+
+// Defaults sets the default vars for the route
+func (r *Route) Defaults(defs ...string) *Route {
+	if len(r.defaults) > 0 {
+		r.err = fmt.Errorf("mux: route already has defaults set up, cannot update!")
+		return r
+	}
+	if len(defs)%2 != 0 {
+		r.err = errors.New("invalid number of arguments to Defaults, expecting even number")
+		return r
+	}
+
+	r.defaults = make(map[string]string, len(defs)/2)
+	for i := 0; i < len(defs); i += 2 {
+		r.defaults[defs[i]] = defs[i+1]
+	}
+	return r
+}
+
+// GetDefaults returns default vars for the route.
+func (r *Route) GetDefaults() map[string]string {
+	return r.defaults
 }
 
 // ----------------------------------------------------------------------------
