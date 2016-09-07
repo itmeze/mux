@@ -630,6 +630,10 @@ type parentRoute interface {
 	buildVars(map[string]string) map[string]string
 }
 
+func (r *Route) GetParent() *parentRoute {
+	return &r.parent
+}
+
 // getNamedRoutes returns the map where named routes are registered.
 func (r *Route) getNamedRoutes() map[string]*Route {
 	if r.parent == nil {
