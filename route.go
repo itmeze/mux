@@ -16,7 +16,7 @@ import (
 // Route stores information to match a request and build URLs.
 type Route struct {
 	// Parent where the route was registered (a Router).
-	parent parentRoute
+	parent ParentRoute
 	// Request handler for the route.
 	handler http.Handler
 	// List of matchers.
@@ -120,7 +120,7 @@ func (r *Route) Name(name string) *Route {
 	}
 	if r.err == nil {
 		r.name = name
-		r.getNamedRoutes()[name] = r
+		r.GetNamedRoutes()[name] = r
 	}
 	return r
 }
@@ -624,23 +624,23 @@ func (r *Route) buildVars(m map[string]string) map[string]string {
 // ----------------------------------------------------------------------------
 
 // parentRoute allows routes to know about parent host and path definitions.
-type parentRoute interface {
-	getNamedRoutes() map[string]*Route
+type ParentRoute interface {
+	GetNamedRoutes() map[string]*Route
 	getRegexpGroup() *routeRegexpGroup
 	buildVars(map[string]string) map[string]string
 }
 
-func (r *Route) GetParent() *parentRoute {
+func (r *Route) GetParent() *ParentRoute {
 	return &r.parent
 }
 
 // getNamedRoutes returns the map where named routes are registered.
-func (r *Route) getNamedRoutes() map[string]*Route {
+func (r *Route) GetNamedRoutes() map[string]*Route {
 	if r.parent == nil {
 		// During tests router is not always set.
 		r.parent = NewRouter()
 	}
-	return r.parent.getNamedRoutes()
+	return r.parent.GetNamedRoutes()
 }
 
 // getRegexpGroup returns regexp definitions from this route.

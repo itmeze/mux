@@ -39,7 +39,7 @@ type Router struct {
 	// Configurable Handler to be used when no route matches.
 	NotFoundHandler http.Handler
 	// Parent route, if this is a subrouter.
-	parent parentRoute
+	parent ParentRoute
 	// Routes to be matched, in order.
 	routes []*Route
 	// Routes by name for URL building.
@@ -109,13 +109,13 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 // Get returns a route registered with the given name.
 func (r *Router) Get(name string) *Route {
-	return r.getNamedRoutes()[name]
+	return r.GetNamedRoutes()[name]
 }
 
 // GetRoute returns a route registered with the given name. This method
 // was renamed to Get() and remains here for backwards compatibility.
 func (r *Router) GetRoute(name string) *Route {
-	return r.getNamedRoutes()[name]
+	return r.GetNamedRoutes()[name]
 }
 
 // StrictSlash defines the trailing slash behavior for new routes. The initial
@@ -155,10 +155,10 @@ func (r *Router) SkipClean(value bool) *Router {
 // ----------------------------------------------------------------------------
 
 // getNamedRoutes returns the map where named routes are registered.
-func (r *Router) getNamedRoutes() map[string]*Route {
+func (r *Router) GetNamedRoutes() map[string]*Route {
 	if r.namedRoutes == nil {
 		if r.parent != nil {
-			r.namedRoutes = r.parent.getNamedRoutes()
+			r.namedRoutes = r.parent.GetNamedRoutes()
 		} else {
 			r.namedRoutes = make(map[string]*Route)
 		}
