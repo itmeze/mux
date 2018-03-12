@@ -229,7 +229,7 @@ func (r *Router) getBuildScheme() string {
 	return ""
 }
 
-// getNamedRoutes returns the map where named routes are registered.
+// getnamedRoutes returns the map where named routes are registered.
 func (r *Router) getnamedRoutes() map[string]*Route {
 	if r.namedRoutes == nil {
 		if r.parent != nil {
